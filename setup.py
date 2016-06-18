@@ -36,7 +36,7 @@ s3BucketName_array = [x.strip() for x in serverFQDN.split('.')]
 i = len(s3BucketName_array)-1
 while i > 0:
     s3BucketName = s3BucketName + s3BucketName_array[i] + "."
-        i = i-1
+    i = i-1
 
 #Append the hostname to the bucket name
 s3BucketName = s3BucketName + serverHostname
