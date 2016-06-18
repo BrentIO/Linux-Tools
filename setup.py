@@ -1,5 +1,6 @@
 import socket
 import fileinput
+import os
 import os.path
 
 #Setup for P5Software linux tools
@@ -70,27 +71,27 @@ if isDryRun.upper == "Y":
 else:
         isDryRun="false"
 
-#Change the file names of the example include and excludes if the files don't already exist
-if os.path.isfile(s3IncludeFile):
-    print "Maintaining your existing S3 include file."
-else:
-    move(s3IncludeFile+".example", s3IncludeFile)
-
-if os.path.isfile(s3ExcludeFile):
-    print "Maintaining your existing S3 exclude file."
-else:
-    move(s3ExcludeFile+".example", s3ExcludeFile)
-
 #See if the user confirmed the data is correct.  If so, write it out
 if userConfirmed.upper() == "Y":
-        fsConfigurationFile = open( configurationFile, 'w')
-        fsConfigurationFile.write("serverHostname=%s\n" % serverHostname)
-        fsConfigurationFile.write("serverFQDN=%s\n" % serverFQDN)
-        fsConfigurationFile.write("s3BucketName=%s\n" % s3BucketName)
-        fsConfigurationFile.write("emailAddress=%s\n" % emailAddress)
-        fsConfigurationFile.write("isDatabaseServer=%s\n" % isDatabaseServer)
-        fsConfigurationFile.write("isDryRun=%s\n" % isDryRun)
-        fsConfigurationFile.close()
+    fsConfigurationFile = open( configurationFile, 'w')
+    fsConfigurationFile.write("serverHostname=%s\n" % serverHostname)
+    fsConfigurationFile.write("serverFQDN=%s\n" % serverFQDN)
+    fsConfigurationFile.write("s3BucketName=%s\n" % s3BucketName)
+    fsConfigurationFile.write("emailAddress=%s\n" % emailAddress)
+    fsConfigurationFile.write("isDatabaseServer=%s\n" % isDatabaseServer)
+    fsConfigurationFile.write("isDryRun=%s\n" % isDryRun)
+    fsConfigurationFile.close()
+
+    #Change the file names of the example include and excludes if the files don't already exist
+    if os.path.isfile(s3IncludeFile):
+        print "Maintaining your existing S3 include file."
+    else:
+        os.move(s3IncludeFile+".example", s3IncludeFile)
+
+    if os.path.isfile(s3ExcludeFile):
+        print "Maintaining your existing S3 exclude file."
+    else:
+        os.move(s3ExcludeFile+".example", s3ExcludeFile)
+
 else:
         print "Destroying the input.  Run setup again to configure."
-
