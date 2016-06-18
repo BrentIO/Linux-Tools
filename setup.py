@@ -1,5 +1,6 @@
 import socket
 import fileinput
+import os.path
 
 #Setup for P5Software linux tools
 #Copyright 2016, P5Software, LLC
@@ -17,7 +18,10 @@ def default_input( message, defaultVal ):
         return raw_input( "%s " % (message) )
 
 #Define variables the user doesn't get to modify
-configurationFile="/etc/P5Software/s3cmd/Linux-Tools/s3cmd.conf"
+P5SoftwareHome="/etc/P5Software/Linux-Tools"
+configurationFile=P5SoftwareHome+"/s3cmd.conf"
+s3IncludeFile=P5SoftwareHome+"/s3cmd/s3cmd.include"
+s3ExcludeFile=P5SoftwareHome+"/s3cmd/s3cmd.include"
 s3BucketName = ""
 
 #Collect the required information from the user
@@ -65,6 +69,15 @@ if isDryRun.upper == "Y":
         isDryRun="true"
 else:
         isDryRun="false"
+
+#Change the file names of the example include and excludes if the files don't already exist
+if os.path.isfile(s3Include):
+else:
+    move(s3Include+".example", s3Include)
+
+if os.path.isfile(s3Include):
+else:
+    move(s3Include+".example", s3Include)
 
 #See if the user confirmed the data is correct.  If so, write it out
 if userConfirmed.upper() == "Y":
