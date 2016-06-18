@@ -7,7 +7,7 @@
 # ------------------------------------------------------------
 # Configuration
 # ------------------------------------------------------------
-P5SoftwareHome=/etc/P5Software
+P5SoftwareHome=/etc/P5Software/Linux-Tools
 scripthome=$P5SoftwareHome/s3cmd
 s3cmdlocation=/usr/local/bin
 logfile=$scripthome/backup.log

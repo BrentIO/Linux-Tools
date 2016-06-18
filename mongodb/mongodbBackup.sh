@@ -5,11 +5,9 @@
 #Script file loosely based on https://sheharyar.me/blog/regular-mongo-backups-using-cron/
 
 BACKUP_TTL_DAYS=3
-MONGO_HOST="127.0.0.1"
-MONGO_PORT="27017"
 TIMESTAMP=`date +%F-%H%M`
 MONGODUMP_PATH="/usr/bin/mongodump"
-BACKUPS_DIR="/etc/P5Software/mongodb/backups"
+BACKUPS_DIR="/etc/P5Software/Linux-Tools/mongodb/backups"
 BACKUP_NAME="$TIMESTAMP"
 LOG_FILE="$BACKUPS_DIR/$BACKUP_NAME.log"
 

@@ -17,7 +17,7 @@ def default_input( message, defaultVal ):
         return raw_input( "%s " % (message) )
 
 #Define variables the user doesn't get to modify
-configurationFile="/etc/P5Software/s3cmd/s3cmd.conf"
+configurationFile="/etc/P5Software/s3cmd/Linux-Tools/s3cmd.conf"
 s3BucketName = ""
 
 #Collect the required information from the user
