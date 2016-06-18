@@ -7,17 +7,22 @@
 # ------------------------------------------------------------
 # Configuration
 # ------------------------------------------------------------
-scripthome=/etc/P5Software/s3cmd
+P5SoftwareHome=/etc/P5Software
+scripthome=$P5SoftwareHome/s3cmd
 s3cmdlocation=/usr/local/bin
 logfile=$scripthome/backup.log
-servername=$(uname -n)
-s3bucket=com.monorailyellow.lan.$servername
+DatabaseBackupScript=$P5SoftwareHome/mongodb/mongodbBackup.sh
 excludefile=$scripthome/s3cmd.exclude
 includefile=$scripthome/s3cmd.include
-confirmationemail=brent.hendricks@monorailyellow.com
-isDatabaseServer=true
-DatabaseBackupScript="/etc/P5Software/mongodb/mongodbBackup.sh"
-dryrun=true
+
+#servername=$(uname -n)
+#s3bucket=com.monorailyellow.lan.$servername
+#confirmationemail=email@somewhere.com
+#isDatabaseServer=false
+#dryrun=true
+
+# Read the configuration
+source s3cmd.conf
 
 # ------------------------------------------------------------
 # Begin Script Execution
