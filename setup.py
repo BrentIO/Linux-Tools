@@ -72,12 +72,14 @@ else:
 
 #Change the file names of the example include and excludes if the files don't already exist
 if os.path.isfile(s3Include):
+    print "Maintaining your existing S3 include file."
 else:
     move(s3Include+".example", s3Include)
 
-if os.path.isfile(s3Include):
+if os.path.isfile(s3Exclude):
+    print "Maintaining your existing S3 exclude file."
 else:
-    move(s3Include+".example", s3Include)
+    move(s3Exclude+".example", s3Exclude)
 
 #See if the user confirmed the data is correct.  If so, write it out
 if userConfirmed.upper() == "Y":
