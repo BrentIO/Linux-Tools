@@ -71,15 +71,15 @@ else:
         isDryRun="false"
 
 #Change the file names of the example include and excludes if the files don't already exist
-if os.path.isfile(s3Include):
+if os.path.isfile(s3IncludeFile):
     print "Maintaining your existing S3 include file."
 else:
-    move(s3Include+".example", s3Include)
+    move(s3IncludeFile+".example", s3IncludeFile)
 
-if os.path.isfile(s3Exclude):
+if os.path.isfile(s3ExcludeFile):
     print "Maintaining your existing S3 exclude file."
 else:
-    move(s3Exclude+".example", s3Exclude)
+    move(s3ExcludeFile+".example", s3ExcludeFile)
 
 #See if the user confirmed the data is correct.  If so, write it out
 if userConfirmed.upper() == "Y":
