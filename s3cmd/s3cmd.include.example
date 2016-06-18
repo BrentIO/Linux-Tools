@@ -1,0 +1,15 @@
+# Version: 201606181214
+
+#This file lists the files or directories that are specifically included in the backing up
+#Note that include is higher priority than exclude
+#This will execute at the root level of the drive "/", so do not include a leading "/"
+#To get an entire directory, include "/*" at the end.  Example: etc/openhab/*
+
+#Information specific to this process
+etc/P5Software/s3cmd/backup.sh
+etc/P5Software/s3cmd/retrieve.sh
+etc/P5Software/s3cmd/s3cmd.exclude
+etc/P5Software/s3cmd/s3cmd.include
+
+#Applications and settings to backup
+#etc/P5Software/mongodb/*

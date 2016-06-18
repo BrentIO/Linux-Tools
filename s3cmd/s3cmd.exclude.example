@@ -1,0 +1,9 @@
+# Version: 201606181214
+
+#This file lists the files or directories that are specifically excluded from backing up.
+#Note that include has a higher priority than exclude.
+
+
+#Exclude all files (this is necessary because the script will start at / and we want to not send anything that isn't specifically included
+*
+
