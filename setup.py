@@ -1,6 +1,6 @@
 import socket
 import fileinput
-import os
+import shutil
 import os.path
 
 #Setup for P5Software linux tools
@@ -20,9 +20,9 @@ def default_input( message, defaultVal ):
 
 #Define variables the user doesn't get to modify
 P5SoftwareHome="/etc/P5Software/Linux-Tools"
-configurationFile=P5SoftwareHome+"/s3cmd.conf"
+configurationFile=P5SoftwareHome+"/s3cmd/s3cmd.conf"
 s3IncludeFile=P5SoftwareHome+"/s3cmd/s3cmd.include"
-s3ExcludeFile=P5SoftwareHome+"/s3cmd/s3cmd.include"
+s3ExcludeFile=P5SoftwareHome+"/s3cmd/s3cmd.exclude"
 s3BucketName = ""
 
 #Collect the required information from the user
@@ -35,7 +35,7 @@ s3BucketName_array = [x.strip() for x in serverFQDN.split('.')]
 #Iterate through the FQDN to get the suggested S3 bucket name
 i = len(s3BucketName_array)-1
 while i > 0:
-        s3BucketName = s3BucketName + s3BucketName_array[i] + "."
+    s3BucketName = s3BucketName + s3BucketName_array[i] + "."
         i = i-1
 
 #Append the hostname to the bucket name
@@ -62,14 +62,14 @@ userConfirmed=default_input("Is this Correct (Y/N)?","Y")
 #Replace the Y/N values with true/false values
 
 if isDatabaseServer.upper == "Y":
-        isDatabaseServer="true"
+    isDatabaseServer="true"
 else:
-        isDatabaseServer="false"
+    isDatabaseServer="false"
 
 if isDryRun.upper == "Y":
-        isDryRun="true"
+    isDryRun="true"
 else:
-        isDryRun="false"
+    isDryRun="false"
 
 #See if the user confirmed the data is correct.  If so, write it out
 if userConfirmed.upper() == "Y":
@@ -81,17 +81,17 @@ if userConfirmed.upper() == "Y":
     fsConfigurationFile.write("isDatabaseServer=%s\n" % isDatabaseServer)
     fsConfigurationFile.write("isDryRun=%s\n" % isDryRun)
     fsConfigurationFile.close()
-
+    
     #Change the file names of the example include and excludes if the files don't already exist
     if os.path.isfile(s3IncludeFile):
         print "Maintaining your existing S3 include file."
     else:
-        os.move(s3IncludeFile+".example", s3IncludeFile)
-
+        shutil.move(s3IncludeFile+".example", s3IncludeFile)
+    
     if os.path.isfile(s3ExcludeFile):
         print "Maintaining your existing S3 exclude file."
     else:
-        os.move(s3ExcludeFile+".example", s3ExcludeFile)
+        shutil.move(s3ExcludeFile+".example", s3ExcludeFile)
 
 else:
-        print "Destroying the input.  Run setup again to configure."
+    print "Destroying the input.  Run setup again to configure."
