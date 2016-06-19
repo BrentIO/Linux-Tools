@@ -1,6 +1,7 @@
 import socket
 import fileinput
 import shutil
+import sys
 import os.path
 
 #Setup for P5Software linux tools
@@ -45,6 +46,7 @@ s3BucketName=default_input("S3 Bucket?",s3BucketName.lower())
 emailAddress=default_input("Confirmation E-Mail Address?","")
 isDatabaseServer=default_input("Is this a MongoDB Server? (Y/N)", "N")
 isDryRun=default_input("Enable Dry-Run? (Y/N)", "Y")
+alreadyExists=default_input("Does this server already have a backup set in S3? (Y/N)", "N")
 
 #Confirm the users' input
 print '=================================='
@@ -56,42 +58,51 @@ print "Amazon S3 Bucket Name: %s" % s3BucketName
 print "Confirmation E-Mail Address: %s" % emailAddress
 print "MongoDB Server: %s" % isDatabaseServer.upper()
 print "Dry-Run Enabled: %s" % isDryRun.upper()
+print "Server Already Exists in S3: %s" % alreadyExists.upper()
 
 userConfirmed=default_input("Is this Correct (Y/N)?","Y")
 
 #Replace the Y/N values with true/false values
 
-if isDatabaseServer.upper == "Y":
+if isDatabaseServer.upper() == "Y":
     isDatabaseServer="true"
 else:
     isDatabaseServer="false"
 
-if isDryRun.upper == "Y":
+if isDryRun.upper() == "Y":
     isDryRun="true"
 else:
     isDryRun="false"
 
-#See if the user confirmed the data is correct.  If so, write it out
-if userConfirmed.upper() == "Y":
-    fsConfigurationFile = open( configurationFile, 'w')
-    fsConfigurationFile.write("serverHostname=%s\n" % serverHostname)
-    fsConfigurationFile.write("serverFQDN=%s\n" % serverFQDN)
-    fsConfigurationFile.write("s3BucketName=%s\n" % s3BucketName)
-    fsConfigurationFile.write("emailAddress=%s\n" % emailAddress)
-    fsConfigurationFile.write("isDatabaseServer=%s\n" % isDatabaseServer)
-    fsConfigurationFile.write("isDryRun=%s\n" % isDryRun)
-    fsConfigurationFile.close()
+if alreadyExists.upper() == "Y":
+    alreadyExists="true"
+else:
+    alreadyExists="false"
+
+if userConfirmed.upper() != "Y":
+    print "Destroying the input.  Run setup again to configure."
+    sys.exit(1)
+
+fsConfigurationFile = open( configurationFile, 'w')
+fsConfigurationFile.write("serverHostname=%s\n" % serverHostname)
+fsConfigurationFile.write("serverFQDN=%s\n" % serverFQDN)
+fsConfigurationFile.write("s3BucketName=%s\n" % s3BucketName)
+fsConfigurationFile.write("emailAddress=%s\n" % emailAddress)
+fsConfigurationFile.write("isDatabaseServer=%s\n" % isDatabaseServer)
+fsConfigurationFile.write("isDryRun=%s\n" % isDryRun)
+fsConfigurationFile.write("alreadyExists=%s\n" % alreadyExists)
+fsConfigurationFile.close()
     
-    #Change the file names of the example include and excludes if the files don't already exist
-    if os.path.isfile(s3IncludeFile):
-        print "Maintaining your existing S3 include file."
-    else:
-        shutil.move(s3IncludeFile+".example", s3IncludeFile)
-    
-    if os.path.isfile(s3ExcludeFile):
-        print "Maintaining your existing S3 exclude file."
-    else:
-        shutil.move(s3ExcludeFile+".example", s3ExcludeFile)
+#If the server doesn't already exist in S3, we can change the names of the include and exclude files
+if alreadyExists == "true":
+    if default_input("Would you like to retrieve your existing include and exclude files? (Y/N)?","Y").upper() == "Y":
+        print "Attempting to retrieve your existing s3cmd.include and s3cmd.exclude files..."
+        os.system("sudo s3cmd get s3://" + s3BucketName + "/" + s3IncludeFile + " " + P5SoftwareHome + "/s3cmd/")
+        os.system("sudo s3cmd get s3://" + s3BucketName + "/" + s3ExcludeFile + " " + P5SoftwareHome + "/s3cmd/")
+        print "Retrieving your existing include and exclude files..."
 
 else:
-    print "Destroying the input.  Run setup again to configure."
+    shutil.move(s3IncludeFile+".example", s3IncludeFile)
+    shutil.move(s3ExcludeFile+".example", s3ExcludeFile)
+
+sys.exit(0)
