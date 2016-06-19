@@ -13,23 +13,15 @@ DatabaseBackupScript=$P5SoftwareHome/mongodb/mongodbBackup.sh
 excludefile=$scripthome/s3cmd.exclude
 includefile=$scripthome/s3cmd.include
 
-#servername=$(uname -n)
-#s3bucket=com.monorailyellow.lan.$servername
-#confirmationemail=email@somewhere.com
-#isDatabaseServer=false
-#dryrun=true
-
-# Read the configuration
+# Read the configuration file
 source s3cmd.conf
 
 # ------------------------------------------------------------
 # Begin Script Execution
 # ------------------------------------------------------------
 
-#Remove the existing log file
-rm $logfile
-
-echo "Sarting backup `date`..." >> $logfile
+#Remove the existing log file and start a new one
+echo "Sarting backup `date`..." > $logfile
 
 # ------------------------------------------------------------
 # Am I Running already? (code thanks to http://www.franzone.com/2007/09/23/how-can-i-tell-if-my-bash-script-is-already-running/comment-page-1/)
@@ -96,7 +88,7 @@ $executescript
 #Send today's log file in an email
 # ------------------------------------------------------------
 
-if [ "$dryrun" = "true" ]; then
+if [ "$isDryRun" = "true" ]; then
 	cat $logfile | mail -s $serverHostname" !!! DRY RUN!!! Backup Executed" $emailAddress
 else
 	cat $logfile | mail -s $serverHostname" Backup Executed" $emailAddress
