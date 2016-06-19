@@ -13,7 +13,7 @@ excludefile=$scripthome/s3cmd.exclude
 includefile=$scripthome/s3cmd.include
 
 # Read the configuration file
-source s3cmd.conf
+source $scripthome/s3cmd.conf
 
 # ------------------------------------------------------------
 # Begin Script Execution

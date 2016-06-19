@@ -89,6 +89,7 @@ if userConfirmed.upper() != "Y":
     print "Destroying the input.  Run setup again to configure."
     sys.exit(1)
 
+#Write the configuration file
 fsConfigurationFile = open( configurationFile, 'w')
 fsConfigurationFile.write("serverHostname=%s\n" % serverHostname)
 fsConfigurationFile.write("serverFQDN=%s\n" % serverFQDN)
@@ -120,9 +121,14 @@ if alreadyExists == "true":
         os.system("sudo s3cmd get s3://" + s3BucketName + s3ExcludeFile + " " + LinuxToolsHome + "/s3cmd/")
     
 else:
-    shutil.move(s3IncludeFile+".example", s3IncludeFile)
-    shutil.move(s3ExcludeFile+".example", s3ExcludeFile)
+    #Attempt to rename the example files to working files so that they can be easily edited.
+    if os.path.isfile(s3IncludeFile+".example"):
+        shutil.move(s3IncludeFile+".example", s3IncludeFile)
+    
+    if os.path.isfile(s3IncludeFile+".example"):
+        shutil.move(s3ExcludeFile+".example", s3ExcludeFile)
 
+#Display a warning if we're doing an upgrade and the directory still exists.  Else this could be very confusing
 if os.path.isdir(P5SoftwareHome + "/s3cmd/"):
     print '*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*='
     print "An old version of P5Software's s3cmd scripts exists."
@@ -131,9 +137,11 @@ if os.path.isdir(P5SoftwareHome + "/s3cmd/"):
     print '*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*='
     print '\n'
 
+#Display a confirmation
 print '=================================='
 print "Setup Complete"
 print '=================================='
+print "Don't forget to add a cron job task to run this regularly!\n"
 print "To execute a backup now, run sudo bash " + LinuxToolsHome + "/s3cmd/backup.sh\n\n"
 print '\n'
 sys.exit(0)
