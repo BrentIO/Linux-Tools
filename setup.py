@@ -122,7 +122,7 @@ if os.path.isdir(P5SoftwareHome + "/s3cmd/"):
     print '*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*='
     print "An old version of P5Software's s3cmd scripts exists."
     print "After successfully executing a backup, you should delete the legacy tools."
-    print "To delete them, run sudo rm -r " + P5SoftwareHome + "/s3cmd/
+    print "To delete them, run sudo rm -r " + P5SoftwareHome + "/s3cmd/"
     print '*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*='
     print '\n'
     print '\n'
