@@ -20,10 +20,11 @@ def default_input( message, defaultVal ):
         return raw_input( "%s " % (message) )
 
 #Define variables the user doesn't get to modify
-P5SoftwareHome="/etc/P5Software/Linux-Tools"
-configurationFile=P5SoftwareHome+"/s3cmd/s3cmd.conf"
-s3IncludeFile=P5SoftwareHome+"/s3cmd/s3cmd.include"
-s3ExcludeFile=P5SoftwareHome+"/s3cmd/s3cmd.exclude"
+P5SoftwareHome="/etc/P5Software"
+LinuxToolsHome=P5SoftwareHome+"/Linux-Tools"
+configurationFile=LinuxToolsHome+"/s3cmd/s3cmd.conf"
+s3IncludeFile=LinuxToolsHome+"/s3cmd/s3cmd.include"
+s3ExcludeFile=LinuxToolsHome+"/s3cmd/s3cmd.exclude"
 s3BucketName = ""
 
 #Collect the required information from the user
@@ -95,12 +96,24 @@ fsConfigurationFile.close()
     
 #If the server doesn't already exist in S3, we can change the names of the include and exclude files
 if alreadyExists == "true":
-    if default_input("Would you like to retrieve your existing include and exclude files? (Y/N)?","Y").upper() == "Y":
-        print "Attempting to retrieve your existing s3cmd.include and s3cmd.exclude files..."
-        os.system("sudo s3cmd get s3://" + s3BucketName + s3IncludeFile + " " + P5SoftwareHome + "/s3cmd/")
-        os.system("sudo s3cmd get s3://" + s3BucketName + s3ExcludeFile + " " + P5SoftwareHome + "/s3cmd/")
-        print "Retrieving your existing include and exclude files..."
+    
+    print "Attempting to retrieve your existing s3cmd.include and s3cmd.exclude files..."
+    
+    #See if we are upgrading.  If so, copy the existing files from the legacy structure
+    if os.path.isfile(P5SoftwareHome+"/s3cmd/s3cmd.include"):
+        shutil.copy(P5SoftwareHome+"/s3cmd/s3cmd.include", s3IncludeFile)
+        print "Upgraded your existing include file."
+    else:
+        print "Attempting to retrieve your existing include file from S3."
+        os.system("sudo s3cmd get s3://" + s3BucketName + s3IncludeFile + " " + LinuxToolsHome + "/s3cmd/")
 
+    if os.path.isfile(P5SoftwareHome+"/s3cmd/s3cmd.exclude"):
+        shutil.copy(P5SoftwareHome+"/s3cmd/s3cmd.exclude", s3ExcludeFile)
+        print "Upgraded your existing exclude file."
+    else:
+        print "Attempting to retrieve your existing exclude file from S3."
+        os.system("sudo s3cmd get s3://" + s3BucketName + s3ExcludeFile + " " + LinuxToolsHome + "/s3cmd/")
+    
 else:
     shutil.move(s3IncludeFile+".example", s3IncludeFile)
     shutil.move(s3ExcludeFile+".example", s3ExcludeFile)
