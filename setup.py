@@ -7,10 +7,12 @@ import os.path
 #Setup for P5Software linux tools
 #Copyright 2016, P5Software, LLC
 
+print '\n'
 print '=================================='
 print '+ P5 Software Linux Tools        +'
 print '+ Initial Setup                  +'
 print '=================================='
+print '\n'
 
 #define a reusable function with a default value
 def default_input( message, defaultVal ):
@@ -50,9 +52,6 @@ isDryRun=default_input("Enable Dry-Run? (Y/N)", "Y")
 alreadyExists=default_input("Does this server already have a backup set in S3? (Y/N)", "N")
 
 #Confirm the users' input
-print '\n'
-print '\n'
-
 print '=================================='
 print "Confirmation"
 print '=================================='
@@ -125,7 +124,7 @@ else:
     if os.path.isfile(s3IncludeFile+".example"):
         shutil.move(s3IncludeFile+".example", s3IncludeFile)
     
-    if os.path.isfile(s3IncludeFile+".example"):
+    if os.path.isfile(s3ExcludeFile+".example"):
         shutil.move(s3ExcludeFile+".example", s3ExcludeFile)
 
 #Display a warning if we're doing an upgrade and the directory still exists.  Else this could be very confusing
