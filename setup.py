@@ -52,8 +52,9 @@ isDryRun=default_input("Enable Dry-Run? (Y/N)", "Y")
 alreadyExists=default_input("Does this server already have a backup set in S3? (Y/N)", "N")
 
 #Confirm the users' input
+print '\n'
 print '=================================='
-print "Confirmation"
+print "+         > Confirmation <       +"
 print '=================================='
 print "Server Hostname: %s" % serverHostname
 print "Server FQDN: %s" % serverFQDN
@@ -129,16 +130,16 @@ else:
 
 #Display a warning if we're doing an upgrade and the directory still exists.  Else this could be very confusing
 if os.path.isdir(P5SoftwareHome + "/s3cmd/"):
-    print '*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*='
-    print "An old version of P5Software's s3cmd scripts exists."
-    print "After successfully executing a backup, you should delete the legacy tools."
-    print "To delete them, run sudo rm -r " + P5SoftwareHome + "/s3cmd/"
-    print '*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*='
+    print '*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*='
+    print "+    An old version of P5Software's s3cmd scripts exists.                        +"
+    print "+    After successfully executing a backup, you should delete the legacy tools.  +"
+    print "+    To delete them, run sudo rm -r " + P5SoftwareHome + "/s3cmd/                +"
+    print '*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*='
     print '\n'
 
 #Display a confirmation
 print '=================================='
-print "Setup Complete"
+print "+        > Setup Complete <      +"
 print '=================================='
 print "Don't forget to add a cron job task to run this regularly!\n"
 print "To execute a backup now, run sudo bash " + LinuxToolsHome + "/s3cmd/backup.sh\n\n"
