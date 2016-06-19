@@ -50,6 +50,9 @@ isDryRun=default_input("Enable Dry-Run? (Y/N)", "Y")
 alreadyExists=default_input("Does this server already have a backup set in S3? (Y/N)", "N")
 
 #Confirm the users' input
+print '\n'
+print '\n'
+
 print '=================================='
 print "Confirmation"
 print '=================================='
@@ -61,7 +64,9 @@ print "MongoDB Server: %s" % isDatabaseServer.upper()
 print "Dry-Run Enabled: %s" % isDryRun.upper()
 print "Server Already Exists in S3: %s" % alreadyExists.upper()
 
+print '\n'
 userConfirmed=default_input("Is this Correct (Y/N)?","Y")
+print '\n'
 
 #Replace the Y/N values with true/false values
 
@@ -124,7 +129,6 @@ if os.path.isdir(P5SoftwareHome + "/s3cmd/"):
     print "After successfully executing a backup, you should delete the legacy tools."
     print "To delete them, run sudo rm -r " + P5SoftwareHome + "/s3cmd/"
     print '*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*='
-    print '\n'
     print '\n'
 
 print '=================================='
