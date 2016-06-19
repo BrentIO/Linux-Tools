@@ -8,6 +8,7 @@ etc/P5Software/Linux-Tools/s3cmd/backup.sh
 etc/P5Software/Linux-Tools/s3cmd/retrieve.sh
 etc/P5Software/Linux-Tools/s3cmd/s3cmd.exclude
 etc/P5Software/Linux-Tools/s3cmd/s3cmd.include
+etc/P5Software/Linux-Tools/s3cmd/s3cmd.conf
 
 #Required for databases
 #etc/P5Software/Linux-Tools/mongodb/*
