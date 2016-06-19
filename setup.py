@@ -118,4 +118,18 @@ else:
     shutil.move(s3IncludeFile+".example", s3IncludeFile)
     shutil.move(s3ExcludeFile+".example", s3ExcludeFile)
 
+if os.path.isdir(P5SoftwareHome + "/s3cmd/"):
+    print '*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*='
+    print "An old version of P5Software's s3cmd scripts exists."
+    print "After successfully executing a backup, you should delete the legacy tools."
+    print "To delete them, run sudo rm -r " + P5SoftwareHome + "/s3cmd/
+    print '*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*='
+    print '\n'
+    print '\n'
+
+print '=================================='
+print "Setup Complete"
+print '=================================='
+print "To execute a backup now, run sudo bash " + LinuxToolsHome + "/s3cmd/backup.sh\n\n"
+print '\n'
 sys.exit(0)

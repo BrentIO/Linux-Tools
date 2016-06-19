@@ -49,7 +49,7 @@ echo ==================================== >> $logfile
 if [ "$isDatabaseServer" = "true" ]; then
 
 	echo "This is a database server.  Backing up the databases..." >> $logfile
-	echo "Command being executed: ["$DatabaseBackupScript"]" >> $logfile
+	echo "Command being executed is: ["$DatabaseBackupScript"]" >> $logfile
 	$DatabaseBackupScript >> $logfile 2>&1
 
 echo "Done backing up database." >> $logfile
