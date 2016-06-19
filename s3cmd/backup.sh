@@ -1,7 +1,5 @@
 #!/bin/bash
 
-# Version: 201606181214
-
 # Code based on http://domwatson.codes/2010/12/cheaper-online-backup-and-sync-part-2.html
 
 # ------------------------------------------------------------
@@ -43,7 +41,7 @@ if [ ! -z "`ps -C \`basename $0\` --no-headers -o "pid,ppid,sid,comm"|grep -v "$
 	echo `date`... Script is already running, aborting. >> $logfile
 
 	#Send a failure message
-	cat $logfile | mail -s $servername" Backup FAILED" $confirmationemail
+	cat $logfile | mail -s $serverHostname" Backup FAILED" $emailAddress
 
 	exit 1
 fi
@@ -70,12 +68,12 @@ fi
 executescript=$s3cmdlocation"/s3cmd sync / --verbose --delete-removed --reduced-redundancy --include-from=$includefile --exclude-from=$excludefile " 
 
 #see if this is a dry run
-if [ "$dryrun" = "true" ]; then
+if [ "$isDryRun" = "true" ]; then
      executescript+=" --dry-run "
      echo "Dry-run enabled!  This is the initial default setting." >> $logfile
 fi
 
-executescript+="s3://${s3bucket,,}/"
+executescript+="s3://${s3BucketName,,}/"
 
 echo "Command being executed is: [ "$executescript" ]" >> $logfile
 
@@ -87,7 +85,7 @@ echo ==================================== >> $logfile
 echo Process completed `date`. >> $logfile
 
 #Upload the log file
-executescript=$s3cmdlocation"/s3cmd put $logfile --reduced-redundancy s3://${s3bucket,,}$logfile" 
+executescript=$s3cmdlocation"/s3cmd put $logfile --reduced-redundancy s3://${s3BucketName,,}$logfile"
 
 echo "Command being executed is: [ "$executescript" ]"
 
@@ -99,9 +97,9 @@ $executescript
 # ------------------------------------------------------------
 
 if [ "$dryrun" = "true" ]; then
-	cat $logfile | mail -s $servername" !!! DRY RUN!!! Backup Executed" $confirmationemail
+	cat $logfile | mail -s $serverHostname" !!! DRY RUN!!! Backup Executed" $emailAddress
 else
-	cat $logfile | mail -s $servername" Backup Executed" $confirmationemail
+	cat $logfile | mail -s $serverHostname" Backup Executed" $emailAddress
 fi
 
 # ------------------------------------------------------------

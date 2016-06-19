@@ -97,8 +97,8 @@ fsConfigurationFile.close()
 if alreadyExists == "true":
     if default_input("Would you like to retrieve your existing include and exclude files? (Y/N)?","Y").upper() == "Y":
         print "Attempting to retrieve your existing s3cmd.include and s3cmd.exclude files..."
-        os.system("sudo s3cmd get s3://" + s3BucketName + "/" + s3IncludeFile + " " + P5SoftwareHome + "/s3cmd/")
-        os.system("sudo s3cmd get s3://" + s3BucketName + "/" + s3ExcludeFile + " " + P5SoftwareHome + "/s3cmd/")
+        os.system("sudo s3cmd get s3://" + s3BucketName + s3IncludeFile + " " + P5SoftwareHome + "/s3cmd/")
+        os.system("sudo s3cmd get s3://" + s3BucketName + s3ExcludeFile + " " + P5SoftwareHome + "/s3cmd/")
         print "Retrieving your existing include and exclude files..."
 
 else:
