@@ -22,6 +22,7 @@ def default_input( message, defaultVal ):
         return raw_input( "%s " % (message) )
 
 #Define variables the user doesn't get to modify
+P5SoftwareHome="/etc/P5Software"
 LinuxToolsHome=P5SoftwareHome+"/Linux-Tools"
 configurationFile=LinuxToolsHome+"/socat/socat-ZWave.conf"
 
@@ -39,7 +40,7 @@ print '=================================='
 print "Serial Server Name: %s" % serialServerName
 print "Serial Server Port: %s" % serialServerPort
 print "Local Device: %s" % localDevice
-print "Socat Executable Location: $s" & socatLocation
+print "Socat Executable Location: %s" % socatLocation
 
 print '\n'
 userConfirmed=default_input("Is this Correct (Y/N)?","Y")
