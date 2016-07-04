@@ -89,17 +89,17 @@ fsConfigurationFile.write("busID=%s\n" % busID)
 fsConfigurationFile.close()
 
 #Copy the service object over
-#os.system("cp")
 
-cp "	" "/etc/init.d/usbip-Client"
-    touch "/var/log/usbip-Client.log" && chown "root" "/var/log/usbip-Client.log"
-        update-rc.d "usbip-Client" defaults
-            service "usbip-Client" start
 
 if installServiceOnCompletion == "Y":
-    print 'I\'ll install here'
+    print 'Installing the Client Service...'
+    os.system("cp /etc/P5Software/Linux-Tools/usbip/usbip-Client /etc/init.d/usbip-Client")
+    os.system("touch \"/var/log/usbip-Client.log\" && chown \"root\" \"/var/log/usbip-Client.log")
+    os.system("update-rc.d usbip-Client defaults")
+    os.system("service usbip-Client start")
+    print 'Done Installing Client Service.'
 else:
-    print 'I was told not to install'
+    print 'The service was not installed at your request.'
 
 #Display a confirmation
 print '=================================='
