@@ -10,7 +10,7 @@ import os.path
 print '\n'
 print '=================================='
 print '+ P5 Software Linux Tools        +'
-print '+ Initial Setup                  +'
+print '+ Backup Setup                   +'
 print '=================================='
 print '\n'
 
