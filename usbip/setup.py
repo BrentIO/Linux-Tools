@@ -95,14 +95,14 @@ if installServiceOnCompletion == "Y":
     if machineType == "Client":
         print 'Installing the Client Service...'
         os.system("cp /etc/P5Software/Linux-Tools/usbip/usbip-Client /etc/init.d/usbip-Client")
-        os.system("touch \"/var/log/usbip-Client.log\" && chown \"root\" \"/var/log/usbip-Client.log")
+        os.system("touch /var/log/usbip-Client.log && chown root /var/log/usbip-Client.log")
         os.system("update-rc.d usbip-Client defaults")
         os.system("service usbip-Client start")
         print 'Done Installing Client Service.'
     else:
         print 'Installing the Server Service...'
         os.system("cp /etc/P5Software/Linux-Tools/usbip/usbip-Server /etc/init.d/usbip-Server")
-        os.system("touch \"/var/log/usbip-Server.log\" && chown \"root\" \"/var/log/usbip-Server.log")
+        os.system("touch /var/log/usbip-Server.log && chown root /var/log/usbip-Server.log")
         os.system("update-rc.d usbip-Server defaults")
         os.system("service usbip-Server start")
         print 'Done Installing Server Service.'
