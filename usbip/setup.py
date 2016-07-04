@@ -91,6 +91,11 @@ fsConfigurationFile.close()
 #Copy the service object over
 #os.system("cp")
 
+cp "	" "/etc/init.d/usbip-Client"
+    touch "/var/log/usbip-Client.log" && chown "root" "/var/log/usbip-Client.log"
+        update-rc.d "usbip-Client" defaults
+            service "usbip-Client" start
+
 if installServiceOnCompletion == "Y":
     print 'I\'ll install here'
 else:
