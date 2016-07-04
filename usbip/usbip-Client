@@ -1,0 +1,85 @@
+#!/bin/bash
+
+### BEGIN INIT INFO
+# Provides:          usbip-Client
+# Required-Start:    $local_fs $network $named $time $syslog
+# Required-Stop:     $local_fs $network $named $time $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Description:       P5Software USB IP Client
+### END INIT INFO
+
+# ------------------------------------------------------------
+# Configuration
+# ------------------------------------------------------------
+P5SoftwareHome=/etc/P5Software/Linux-Tools
+scripthome=$P5SoftwareHome/usbip
+
+# Read the configuration file
+source $scripthome/usbip-Client.conf
+
+SCRIPT="usbip attach -r $serverFQDN -b $busID"
+RUNAS=root
+
+PIDFILE=/var/run/usbip-Client.pid
+LOGFILE=/var/log/usbip-Client.log
+
+start() {
+if [ -f /var/run/$PIDNAME ] && kill -0 $(cat /var/run/$PIDNAME); then
+echo 'Service already running' >&2
+return 1
+fi
+
+#Set the environment appropriately
+modprobe vhci-hcd
+
+echo $(date +%Y-%m-%d\ %H:%M:%S) 'Starting service…' >&2
+local CMD="$SCRIPT &> \"$LOGFILE\" & echo \$!"
+su -c "$CMD" $RUNAS > "$PIDFILE"
+echo $(date +%Y-%m-%d\ %H:%M:%S) 'Service started' >&2
+}
+
+stop() {
+if [ ! -f "$PIDFILE" ] || ! kill -0 $(cat "$PIDFILE"); then
+echo 'Service not running' >&2
+return 1
+fi
+echo $(date +%Y-%m-%d\ %H:%M:%S) 'Stopping service…' >&2
+
+#Unbind the device
+usbip detach -p 0
+
+kill -15 $(cat "$PIDFILE") && rm -f "$PIDFILE"
+echo $(date +%Y-%m-%d\ %H:%M:%S) 'Service stopped' >&2
+}
+
+uninstall() {
+echo -n "Are you really sure you want to uninstall this service? That cannot be undone. [yes|No] "
+local SURE
+read SURE
+if [ "$SURE" = "yes" ]; then
+stop
+rm -f "$PIDFILE"
+echo "Notice: log file is not be removed: '$LOGFILE'" >&2
+update-rc.d -f usbip-Client remove
+rm -fv "$0"
+fi
+}
+
+case "$1" in
+start)
+start
+;;
+stop)
+stop
+;;
+uninstall)
+uninstall
+;;
+retart)
+stop
+start
+;;
+*)
+echo "Usage: $0 {start|stop|restart|uninstall}"
+esac
