@@ -53,18 +53,6 @@ kill -15 $(cat "$PIDFILE") && rm -f $PIDFILE
 echo $(date +%Y-%m-%d\ %H:%M:%S) 'Service stopped' >> $LOGFILE 2>&1
 }
 
-uninstall() {
-echo -n "Are you really sure you want to uninstall this service? That cannot be undone. [yes|No] "
-local SURE
-read SURE
-if [ "$SURE" = "yes" ]; then
-stop
-rm -f "$PIDFILE"
-echo "Notice: log file is not be removed: '$LOGFILE'" >&2
-update-rc.d -f usbip-Client remove
-rm -fv "$0"
-fi
-}
 
 case "$1" in
 start)
