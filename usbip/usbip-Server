@@ -40,9 +40,11 @@ case "$1" in
 # Start
 # ------------------------------------------------------------
 start)
+echo 'BLAH.'
+
 if [ -f $PIDFILE ]; then
 echo 'Service already running.'
-exit 100
+exit 1
 fi
 
 #Set the environment appropriately
@@ -54,7 +56,14 @@ modprobe usbip-host
 echo "Modprobe set."
 
 echo "Starting service..."
-start-stop-daemon --start --pidfile $PIDFILE --make-pidfile --exec $DAEMON -- $DAEMON_OPTS -f
+start-stop-daemon --start --pidfile $PIDFILE --make-pidfile --exec $DAEMON -- $DAEMON_OPTS
+
+#Force the PID to be correct, this is required because we're forking
+echo "Creating pidfile..."
+cat /dev/null > $PIDFILE
+pidof $EXECUTABLE >> $PIDFILE
+echo "Created pidfile " $(cat $PIDFILE)
+
 echo "Service started."
 
 echo "Binding device..."
@@ -67,9 +76,12 @@ echo "Bind complete."
 # Stop
 # ------------------------------------------------------------
 stop)
-if [ ! -f $PIDFILE ] || ! kill -0 $(cat $PIDFILE); then
+#if [ ! -f $PIDFILE ] || ! kill -0 $(cat $PIDFILE); then
+if [ ! -f $PIDFILE ]; then
+#start-stop-daemon --status --name $NAME && status="0" || status="$?"
+#if $status != "0"; then
 echo 'Service not running.'
-exit 1
+exit 3
 fi
 
 #Unbind the device
@@ -79,9 +91,11 @@ echo "Unbind complete."
 
 #Stop the service
 echo "Stopping service..."
-start-stop-daemon --stop --quiet --oknodo --pidfile $PIDFILE
+start-stop-daemon --stop --pidfile $PIDFILE --remove-pidfile
+#rm -f "$PIDFILE"
+#--pidfile $PIDFILE --oknodo
 echo "Service stopped."
-
+exit 0
 ;;
 
 
@@ -89,7 +103,8 @@ echo "Service stopped."
 # Status
 # ------------------------------------------------------------
 status)
-status_of_proc -p $PIDFILE $PATH $EXECUTABLE && exit 0 || exit $?
+status_of_proc $PATH $EXECUTABLE && exit 0 || exit $?
+#-p $PIDFILE
 ;;
 
 
@@ -103,7 +118,7 @@ read SURE
 if [ "$SURE" = "yes" ]; then
 stop
 rm -f "$PIDFILE"
-update-rc.d -f usbip-Server remove
+update-rc.d -f $NAME remove
 rm -fv "$0"
 fi
 ;;
