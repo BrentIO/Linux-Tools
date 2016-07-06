@@ -1,12 +1,12 @@
 #!/bin/bash
 
 ### BEGIN INIT INFO
-# Provides:          usbip-Client
+# Provides:          usbip-Server
 # Required-Start:    $local_fs $network $named $time $syslog
 # Required-Stop:     $local_fs $network $named $time $syslog
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
-# Description:       P5Software USB IP Client
+# Description:       P5Software USB IP Server
 ### END INIT INFO
 
 # ------------------------------------------------------------
@@ -18,18 +18,18 @@ scripthome=$P5SoftwareHome/usbip
 # Must be a valid filename
 NAME=usbip-Server
 PIDFILE=/var/run/$NAME.pid
-LOGFILE=/var/log/$NAME.log
 
 # Read the configuration file
 source $scripthome/$NAME.conf
 
 #This is the command to be run, give the full pathname
-PATH=/usr/bin
-EXECUTABLE=usbip
+PATH=/usr/sbin
+EXECUTABLE=usbipd
 DAEMON=$PATH/$EXECUTABLE
 
-DAEMON_OPTS="attach -r $serverFQDN -b $busID"
-DETACH_OPTS="detach -p 0"
+DAEMON_OPTS="-D"
+BIND_OPTS="usbip bind -b $busID"
+UNBIND_OPTS="usbip unbind -b $busID"
 
 export PATH="/usr/sbin:/sbin:/usr/bin:/bin"
 
@@ -40,21 +40,35 @@ case "$1" in
 # Start
 # ------------------------------------------------------------
 start)
-if [ -f $PIDFILE ] && kill -0 $(cat $PIDFILE); then
-echo -n 'Service already running'
-echo $(date -u) 'Service already running' >> $LOGFILE 2>&1
-exit 100
+echo 'BLAH.'
+
+if [ -f $PIDFILE ]; then
+echo 'Service already running.'
+exit 1
 fi
 
 #Set the environment appropriately
-echo "Setting modprobe vhci-hcd"
-modprobe vhci-hcd
+echo "Setting modprobe usbip-core..."
+modprobe usbip-core
+echo "Modprobe set."
+echo "Setting modprobe usbip-host..."
+modprobe usbip-host
+echo "Modprobe set."
 
-echo "Starting service"
-echo $(date -u) 'Starting service…' >> $LOGFILE 2>&1
+echo "Starting service..."
 start-stop-daemon --start --pidfile $PIDFILE --make-pidfile --exec $DAEMON -- $DAEMON_OPTS
-#--quiet
-echo $(date -u) 'Service started' >> $LOGFILE 2>&1
+
+#Force the PID to be correct, this is required because we're forking
+echo "Creating pidfile..."
+cat /dev/null > $PIDFILE
+pidof $EXECUTABLE >> $PIDFILE
+echo "Created pidfile " $(cat $PIDFILE)
+
+echo "Service started."
+
+echo "Binding device..."
+$BIND_OPTS
+echo "Bind complete."
 ;;
 
 
@@ -62,29 +76,26 @@ echo $(date -u) 'Service started' >> $LOGFILE 2>&1
 # Stop
 # ------------------------------------------------------------
 stop)
-if [ ! -f $PIDFILE ] || ! kill -0 $(cat $PIDFILE); then
-echo $(date -u) 'Service not running' >> $LOGFILE 2>&1
-exit 1
+#if [ ! -f $PIDFILE ] || ! kill -0 $(cat $PIDFILE); then
+if [ ! -f $PIDFILE ]; then
+#start-stop-daemon --status --name $NAME && status="0" || status="$?"
+#if $status != "0"; then
+echo 'Service not running.'
+exit 3
 fi
 
-#Detach the device
-echo "Detaching device..."
-echo $(date -u) 'Detaching device…' >> $LOGFILE 2>&1
-
-echo $DAEMON $DETACH_OPTS >> $LOGFILE 2>&1
-
-echo "Device detached."
-echo $(date -u) 'Device detached.' >> $LOGFILE 2>&1
+#Unbind the device
+echo "Unbinding device..."
+$UNBIND_OPTS
+echo "Unbind complete."
 
 #Stop the service
-echo "Stopping service:"
-echo $(date -u) 'Stopping service…' >> $LOGFILE 2>&1
-
-start-stop-daemon --stop --quiet --oknodo --pidfile $PIDFILE
+echo "Stopping service..."
+start-stop-daemon --stop --pidfile $PIDFILE --remove-pidfile
+#rm -f "$PIDFILE"
+#--pidfile $PIDFILE --oknodo
 echo "Service stopped."
-echo $(ls /dev/ttyU*)
-
-echo $(date -u) 'Service stopped.' >> $LOGFILE 2>&1
+exit 0
 ;;
 
 
@@ -92,7 +103,8 @@ echo $(date -u) 'Service stopped.' >> $LOGFILE 2>&1
 # Status
 # ------------------------------------------------------------
 status)
-status_of_proc -p $PIDFILE $PATH $EXECUTABLE && exit 0 || exit $?
+status_of_proc $PATH $EXECUTABLE && exit 0 || exit $?
+#-p $PIDFILE
 ;;
 
 
@@ -100,14 +112,13 @@ status_of_proc -p $PIDFILE $PATH $EXECUTABLE && exit 0 || exit $?
 # Uninstall
 # ------------------------------------------------------------
 uninstall)
-echo -n "Are you really sure you want to uninstall this service? That cannot be undone. [yes|No] "
+echo "Are you really sure you want to uninstall this service? That cannot be undone. [yes|No] "
 local SURE
 read SURE
 if [ "$SURE" = "yes" ]; then
 stop
 rm -f "$PIDFILE"
-echo "Notice: log file is not be removed: '$LOGFILE'" >&2
-update-rc.d -f usbip-Client remove
+update-rc.d -f $NAME remove
 rm -fv "$0"
 fi
 ;;
