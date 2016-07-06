@@ -40,7 +40,7 @@ case "$1" in
 # ------------------------------------------------------------
 start)
 if [ -f $PIDFILE ] && kill -0 $(cat $PIDFILE); then
-echo -n 'Service already running.'
+echo 'Service already running.'
 exit 100
 fi
 
@@ -52,7 +52,7 @@ echo "Modprobe set."
 echo "Starting service..."
 start-stop-daemon --start --pidfile $PIDFILE --make-pidfile --exec $DAEMON -- $DAEMON_OPTS
 echo "" > $PIDFILE
-echo "Service started.."
+echo "Service started."
 ;;
 
 
@@ -95,7 +95,7 @@ status_of_proc -p $PIDFILE $PATH $EXECUTABLE && exit 0 || exit $?
 # Uninstall
 # ------------------------------------------------------------
 uninstall)
-echo -n "Are you really sure you want to uninstall this service? That cannot be undone. [yes|No] "
+echo "Are you really sure you want to uninstall this service? That cannot be undone. [yes|No] "
 local SURE
 read SURE
 if [ "$SURE" = "yes" ]; then
