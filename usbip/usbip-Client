@@ -18,7 +18,6 @@ scripthome=$P5SoftwareHome/usbip
 # Must be a valid filename
 NAME=usbip-Client
 PIDFILE=/var/run/$NAME.pid
-LOGFILE=/var/log/$NAME.log
 
 # Read the configuration file
 source $scripthome/$NAME.conf
@@ -27,10 +26,11 @@ source $scripthome/$NAME.conf
 PATH=/usr/bin
 EXECUTABLE=usbip
 DAEMON=$PATH/$EXECUTABLE
+
 DAEMON_OPTS="attach -r $serverFQDN -b $busID"
 DETACH_OPTS="detach -p 0"
 
-export PATH="${PATH:+$PATH:}/usr/sbin:/sbin:/usr/bin"
+export PATH="/usr/sbin:/sbin:/usr/bin:/bin"
 
 case "$1" in
 
@@ -39,19 +39,20 @@ case "$1" in
 # Start
 # ------------------------------------------------------------
 start)
-if [ -f /var/run/$PIDNAME ] && kill -0 $(cat /var/run/$PIDNAME); then
-echo $(date +%Y-%m-%d\ %H:%M:%S) 'Service already running' >> $LOGFILE 2>&1
-return 1
+if [ -f $PIDFILE ] && kill -0 $(cat $PIDFILE); then
+echo -n 'Service already running.'
+exit 100
 fi
 
 #Set the environment appropriately
+echo "Setting modprobe vhci-hcd..."
 modprobe vhci-hcd
+echo "Modprobe set."
 
-echo -n "Starting service: "$NAME
-echo $(date +%Y-%m-%d\ %H:%M:%S) 'Starting service…' >> $LOGFILE 2>&1
-start-stop-daemon --start --quiet --pidfile $PIDFILE --exec $DAEMON -- $DAEMON_OPTS
-echo $(date +%Y-%m-%d\ %H:%M:%S) 'Service started' >> $LOGFILE 2>&1
-echo "."
+echo "Starting service..."
+start-stop-daemon --start --pidfile $PIDFILE --make-pidfile --exec $DAEMON -- $DAEMON_OPTS
+echo "" > $PIDFILE
+echo "Service started.."
 ;;
 
 
@@ -59,28 +60,26 @@ echo "."
 # Stop
 # ------------------------------------------------------------
 stop)
-if [ ! -f $PIDFILE ] || ! kill -0 $(cat $PIDFILE); then
-echo $(date +%Y-%m-%d\ %H:%M:%S) 'Service not running' >> $LOGFILE 2>&1
-return 1
+if [ ! -f $PIDFILE ]; then
+echo 'Service not running.'
+exit 1
 fi
 
 #Detach the device
-echo -n "Detaching device..."
-echo $(date +%Y-%m-%d\ %H:%M:%S) 'Detaching device…' >> $LOGFILE 2>&1
+echo "Detaching device..."
 
-$DAEMON $DETACH_OPTS >> $LOGFILE 2>&1
+$DAEMON $DETACH_OPTS
 
-echo -n "Device detached."
-echo $(date +%Y-%m-%d\ %H:%M:%S) 'Device detached.' >> $LOGFILE 2>&1
+echo "Device detached."
 
 #Stop the service
-echo -n "Stopping service: "$NAME
-echo $(date +%Y-%m-%d\ %H:%M:%S) 'Stopping service…' >> $LOGFILE 2>&1
-
-start-stop-daemon --stop --quiet --oknodo --pidfile $PIDFILE
+echo "Stopping service..."
+echo "Ignoring that there is no pid in the pid file; Expected behavior."
+start-stop-daemon --stop --oknodo --pidfile $PIDFILE
 echo "Service stopped."
 
-echo $(date +%Y-%m-%d\ %H:%M:%S) 'Service stopped.' >> $LOGFILE 2>&1
+
+rm -r $PIDFILE
 ;;
 
 
@@ -95,18 +94,17 @@ status_of_proc -p $PIDFILE $PATH $EXECUTABLE && exit 0 || exit $?
 # ------------------------------------------------------------
 # Uninstall
 # ------------------------------------------------------------
-uninstall() {
+uninstall)
 echo -n "Are you really sure you want to uninstall this service? That cannot be undone. [yes|No] "
 local SURE
 read SURE
 if [ "$SURE" = "yes" ]; then
 stop
 rm -f "$PIDFILE"
-echo "Notice: log file is not be removed: '$LOGFILE'" >&2
 update-rc.d -f usbip-Client remove
 rm -fv "$0"
 fi
-}
+;;
 
 
 # ------------------------------------------------------------
