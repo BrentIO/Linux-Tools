@@ -16,7 +16,7 @@ P5SoftwareHome=/etc/P5Software/Linux-Tools
 scripthome=$P5SoftwareHome/usbip
 
 # Must be a valid filename
-NAME=usbip-Client
+NAME=usbip-Server
 PIDFILE=/var/run/$NAME.pid
 LOGFILE=/var/log/$NAME.log
 
