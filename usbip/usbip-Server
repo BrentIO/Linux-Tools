@@ -40,8 +40,6 @@ case "$1" in
 # Start
 # ------------------------------------------------------------
 start)
-echo 'BLAH.'
-
 if [ -f $PIDFILE ]; then
 echo 'Service already running.'
 exit 1
@@ -76,10 +74,7 @@ echo "Bind complete."
 # Stop
 # ------------------------------------------------------------
 stop)
-#if [ ! -f $PIDFILE ] || ! kill -0 $(cat $PIDFILE); then
 if [ ! -f $PIDFILE ]; then
-#start-stop-daemon --status --name $NAME && status="0" || status="$?"
-#if $status != "0"; then
 echo 'Service not running.'
 exit 3
 fi
@@ -92,8 +87,6 @@ echo "Unbind complete."
 #Stop the service
 echo "Stopping service..."
 start-stop-daemon --stop --pidfile $PIDFILE --remove-pidfile
-#rm -f "$PIDFILE"
-#--pidfile $PIDFILE --oknodo
 echo "Service stopped."
 exit 0
 ;;
@@ -104,7 +97,6 @@ exit 0
 # ------------------------------------------------------------
 status)
 status_of_proc $PATH $EXECUTABLE && exit 0 || exit $?
-#-p $PIDFILE
 ;;
 
 
@@ -112,12 +104,14 @@ status_of_proc $PATH $EXECUTABLE && exit 0 || exit $?
 # Uninstall
 # ------------------------------------------------------------
 uninstall)
+if [ -f $PIDFILE ]; then
+echo 'You must stop the service before you can uninstall it.'
+exit 1
+fi
+
 echo "Are you really sure you want to uninstall this service? That cannot be undone. [yes|No] "
-local SURE
 read SURE
 if [ "$SURE" = "yes" ]; then
-stop
-rm -f "$PIDFILE"
 update-rc.d -f $NAME remove
 rm -fv "$0"
 fi
