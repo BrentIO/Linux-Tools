@@ -103,22 +103,17 @@ fsConfigurationFile.close()
 #If the server doesn't already exist in S3, we can change the names of the include and exclude files
 if alreadyExists == "true":
     
-    print "Attempting to retrieve your existing s3cmd.include and s3cmd.exclude files..."
+    print "Attempting to retrieve your existing s3.conf, s3cmd.include, and s3cmd.exclude files..."
     
     #See if we are upgrading.  If so, copy the existing files from the legacy structure
-    if os.path.isfile(P5SoftwareHome+"/s3cmd/s3cmd.include"):
-        shutil.copy(P5SoftwareHome+"/s3cmd/s3cmd.include", s3IncludeFile)
-        print "Upgraded your existing include file."
-    else:
-        print "Attempting to retrieve your existing include file from S3."
-        os.system("sudo s3cmd get s3://" + s3BucketName + s3IncludeFile + " " + LinuxToolsHome + "/s3cmd/")
+    print "Attempting to retrieve your existing conf file from S3."
+    os.system("sudo s3cmd get s3://" + s3BucketName + configurationFile + " " + LinuxToolsHome + "/s3cmd/")
 
-    if os.path.isfile(P5SoftwareHome+"/s3cmd/s3cmd.exclude"):
-        shutil.copy(P5SoftwareHome+"/s3cmd/s3cmd.exclude", s3ExcludeFile)
-        print "Upgraded your existing exclude file."
-    else:
-        print "Attempting to retrieve your existing exclude file from S3."
-        os.system("sudo s3cmd get s3://" + s3BucketName + s3ExcludeFile + " " + LinuxToolsHome + "/s3cmd/")
+    print "Attempting to retrieve your existing include file from S3."
+    os.system("sudo s3cmd get s3://" + s3BucketName + s3IncludeFile + " " + LinuxToolsHome + "/s3cmd/")
+
+    print "Attempting to retrieve your existing exclude file from S3."
+    os.system("sudo s3cmd get s3://" + s3BucketName + s3ExcludeFile + " " + LinuxToolsHome + "/s3cmd/")
     
 else:
     #Attempt to rename the example files to working files so that they can be easily edited.
@@ -143,5 +138,6 @@ print "+        > Setup Complete <      +"
 print '=================================='
 print "Don't forget to add a cron job task to run this regularly!\n"
 print "To execute a backup now, run sudo bash " + LinuxToolsHome + "/s3cmd/backup.sh\n\n"
+print "To execute a restore now, run sudo bash " + LinuxToolsHome + "/s3cmd/restore.sh\n\n"
 print '\n'
 sys.exit(0)

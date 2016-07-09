@@ -15,6 +15,7 @@ includefile=$scripthome/s3cmd.include
 
 # Read the configuration file
 source $scripthome/s3cmd.conf
+
 PATH=/bin:/usr:/usr/bin:/usr/local/bin/:/etc/P5Software/Linux-Tools/s3cmd
 
 # ------------------------------------------------------------
@@ -58,7 +59,7 @@ echo "Done backing up database." >> $logfile
 echo ==================================== >> $logfile
 fi
 
-executescript=$s3cmdlocation"s3cmd sync / --stats --delete-removed --reduced-redundancy --include-from=$includefile --exclude-from=$excludefile " 
+executescript="s3cmd sync / --stats --delete-removed --reduced-redundancy --include-from=$includefile --exclude-from=$excludefile "
 
 #see if this is a dry run
 if [ "$isDryRun" = "true" ]; then
@@ -78,7 +79,7 @@ echo ==================================== >> $logfile
 echo Process completed `date`. >> $logfile
 
 #Upload the log file
-executescript=$s3cmdlocation"/s3cmd put $logfile --reduced-redundancy s3://${s3BucketName,,}$logfile"
+executescript="s3cmd put $logfile --reduced-redundancy s3://${s3BucketName,,}$logfile"
 
 echo "Command being executed is: [ "$executescript" ]"
 
