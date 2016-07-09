@@ -107,7 +107,7 @@ if alreadyExists == "true":
     
     #See if we are upgrading.  If so, copy the existing files from the legacy structure
     print "Attempting to retrieve your existing conf file from S3."
-    os.system("sudo s3cmd get s3://" + s3BucketName + configurationFile + " " + LinuxToolsHome + "/s3cmd/")
+    os.system("sudo s3cmd get --force s3://" + s3BucketName + configurationFile + " " + LinuxToolsHome + "/s3cmd/")
 
     print "Attempting to retrieve your existing include file from S3."
     os.system("sudo s3cmd get s3://" + s3BucketName + s3IncludeFile + " " + LinuxToolsHome + "/s3cmd/")
@@ -133,11 +133,12 @@ if os.path.isdir(P5SoftwareHome + "/s3cmd/"):
     print '\n'
 
 #Display a confirmation
+print '\n'
 print '=================================='
 print "+        > Setup Complete <      +"
 print '=================================='
 print "Don't forget to add a cron job task to run this regularly!\n"
-print "To execute a backup now, run sudo bash " + LinuxToolsHome + "/s3cmd/backup.sh\n\n"
+print "To execute a backup now, run sudo bash " + LinuxToolsHome + "/s3cmd/backup.sh\n"
 print "To execute a restore now, run sudo bash " + LinuxToolsHome + "/s3cmd/restore.sh\n\n"
 print '\n'
 sys.exit(0)
