@@ -107,7 +107,7 @@ if alreadyExists == "true":
     
     #See if we are upgrading.  If so, copy the existing files from the legacy structure
     print "Attempting to retrieve your existing conf file from S3."
-    os.system("sudo s3cmd get s3://" + s3BucketName + configurationFile + " " + LinuxToolsHome + "/s3cmd/")
+    os.system("sudo s3cmd get --force s3://" + s3BucketName + configurationFile + " " + LinuxToolsHome + "/s3cmd/")
 
     print "Attempting to retrieve your existing include file from S3."
     os.system("sudo s3cmd get s3://" + s3BucketName + s3IncludeFile + " " + LinuxToolsHome + "/s3cmd/")
