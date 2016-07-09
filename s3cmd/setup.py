@@ -133,11 +133,12 @@ if os.path.isdir(P5SoftwareHome + "/s3cmd/"):
     print '\n'
 
 #Display a confirmation
+print '\n'
 print '=================================='
 print "+        > Setup Complete <      +"
 print '=================================='
 print "Don't forget to add a cron job task to run this regularly!\n"
-print "To execute a backup now, run sudo bash " + LinuxToolsHome + "/s3cmd/backup.sh\n\n"
+print "To execute a backup now, run sudo bash " + LinuxToolsHome + "/s3cmd/backup.sh\n"
 print "To execute a restore now, run sudo bash " + LinuxToolsHome + "/s3cmd/restore.sh\n\n"
 print '\n'
 sys.exit(0)
