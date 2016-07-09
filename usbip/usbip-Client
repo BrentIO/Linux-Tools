@@ -95,13 +95,15 @@ status_of_proc -p $PIDFILE $PATH $EXECUTABLE && exit 0 || exit $?
 # Uninstall
 # ------------------------------------------------------------
 uninstall)
+if [ -f $PIDFILE ]; then
+echo 'You must stop the service before you can uninstall it.'
+exit 1
+fi
+
 echo "Are you really sure you want to uninstall this service? That cannot be undone. [yes|No] "
-local SURE
 read SURE
 if [ "$SURE" = "yes" ]; then
-stop
-rm -f "$PIDFILE"
-update-rc.d -f usbip-Client remove
+update-rc.d -f $NAME remove
 rm -fv "$0"
 fi
 ;;
