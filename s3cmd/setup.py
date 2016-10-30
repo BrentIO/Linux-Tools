@@ -47,6 +47,7 @@ s3BucketName = s3BucketName + serverHostname
 
 s3BucketName=default_input("S3 Bucket?",s3BucketName.lower())
 emailAddress=default_input("Confirmation E-Mail Address?","")
+sendMailEvent=default_input("Send Confirmation Emails Only On Failure Or All Events? (Only on Failure/All Events)", "Only on Failure")
 isDatabaseServer=default_input("Is this a MongoDB Server? (Y/N)", "N")
 isDryRun=default_input("Enable Dry-Run? (Y/N)", "Y")
 alreadyExists=default_input("Does this server already have a backup set in S3? (Y/N)", "N")
@@ -60,6 +61,7 @@ print "Server Hostname: %s" % serverHostname
 print "Server FQDN: %s" % serverFQDN
 print "Amazon S3 Bucket Name: %s" % s3BucketName
 print "Confirmation E-Mail Address: %s" % emailAddress
+print "Send E-Mail Confirmation For: %s" % sendMailEvent
 print "MongoDB Server: %s" % isDatabaseServer.upper()
 print "Dry-Run Enabled: %s" % isDryRun.upper()
 print "Server Already Exists in S3: %s" % alreadyExists.upper()
@@ -88,6 +90,11 @@ else:
 if userConfirmed.upper() != "Y":
     print "Destroying the input.  Run setup again to configure."
     sys.exit(1)
+    
+if sendMailEvent.upper() == "ONLY ON FAILURE":
+     sendMailEvent = "ONLY_ON_FAILURE"
+else:
+     sendMailEvent = "ALL"
 
 #Write the configuration file
 fsConfigurationFile = open( configurationFile, 'w')
@@ -95,6 +102,7 @@ fsConfigurationFile.write("serverHostname=%s\n" % serverHostname)
 fsConfigurationFile.write("serverFQDN=%s\n" % serverFQDN)
 fsConfigurationFile.write("s3BucketName=%s\n" % s3BucketName)
 fsConfigurationFile.write("emailAddress=%s\n" % emailAddress)
+fsConfigurationFile.write("sendMailEvent=%s\n" % sendMailEvent)
 fsConfigurationFile.write("isDatabaseServer=%s\n" % isDatabaseServer)
 fsConfigurationFile.write("isDryRun=%s\n" % isDryRun)
 fsConfigurationFile.write("alreadyExists=%s\n" % alreadyExists)
