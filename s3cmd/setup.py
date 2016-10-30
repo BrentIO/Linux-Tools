@@ -114,20 +114,14 @@ if alreadyExists == "true":
     print "Attempting to retrieve your existing s3.conf, s3cmd.include, and s3cmd.exclude files..."
     
     #See if we are upgrading.  If so, copy the existing files from the legacy structure
-     if os.path.isfile(configurationFile):
-     else:
-          print "Attempting to retrieve your existing conf file from S3."
-          os.system("sudo s3cmd get s3://" + s3BucketName + configurationFile + " " + LinuxToolsHome + "/s3cmd/")
+     print "Attempting to retrieve your existing conf file from S3."
+     os.system("sudo s3cmd get s3://" + s3BucketName + configurationFile + " " + LinuxToolsHome + "/s3cmd/")
 
-     if os.path.isfile(s3IncludeFile):
-     else:
-          print "Attempting to retrieve your existing include file from S3."
-          os.system("sudo s3cmd get s3://" + s3BucketName + s3IncludeFile + " " + LinuxToolsHome + "/s3cmd/")
+     print "Attempting to retrieve your existing include file from S3."
+     os.system("sudo s3cmd get s3://" + s3BucketName + s3IncludeFile + " " + LinuxToolsHome + "/s3cmd/")
 
-     if os.path.isfile(s3ExcludeFile):
-     else:
-          print "Attempting to retrieve your existing exclude file from S3."
-          os.system("sudo s3cmd get s3://" + s3BucketName + s3ExcludeFile + " " + LinuxToolsHome + "/s3cmd/")
+     print "Attempting to retrieve your existing exclude file from S3."
+     os.system("sudo s3cmd get s3://" + s3BucketName + s3ExcludeFile + " " + LinuxToolsHome + "/s3cmd/")
     
 else:
     #Attempt to rename the example files to working files so that they can be easily edited.
