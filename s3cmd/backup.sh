@@ -125,8 +125,8 @@ echo -e "\t${CYAN}alreadyExists${NC}=${RED}$alreadyExists${NC}"
 
 #========  DELETE APPLE-SPECIFIC JUNK FILES ===========
 LogMessage "Starting to delete junk files."
-find . -iname "._*" -delete |& tee -a $logfile
-find . -iname ".DS_Store" -delete |& tee -a $logfile
+find / -iname "._*" -delete |& tee -a $logfile
+find / -iname ".DS_Store" -delete |& tee -a $logfile
 LogMessage "Completed deleting junk files."
 
 
