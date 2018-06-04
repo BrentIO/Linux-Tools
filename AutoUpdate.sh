@@ -26,8 +26,8 @@ if [ $responseCode != 0 ]; then
     exit $responseCode
 fi  
 
-#Upgrade the distribution, which shouldn't really be necessary but 
-echo -e "\n${CYAN}Upgrading packages using dist-upgrade.${NC}"
+#Upgrade the distribution and packages
+echo -e "\n${CYAN}Upgrading packages and kernel using dist-upgrade.${NC}"
 apt-get dist-upgrade -y
 
 responseCode=$?
