@@ -16,8 +16,18 @@ if ! [ $(id -u) = 0 ]; then
    exit 1
 fi
 
-#Update the distribution, which shouldn't really be necessary but 
-echo -e "\n${CYAN}Updating apt using dist-upgrade.${NC}"
+#Update apt
+echo -e "\n${CYAN}Updating apt package lists.${NC}"
+apt-get update
+
+responseCode=$?
+if [ $responseCode != 0 ]; then
+    echo -e "\n${RED}Error: ${NC}$responseCode"
+    exit $responseCode
+fi  
+
+#Upgrade the distribution, which shouldn't really be necessary but 
+echo -e "\n${CYAN}Upgrading packages using dist-upgrade.${NC}"
 apt-get dist-upgrade -y
 
 responseCode=$?
