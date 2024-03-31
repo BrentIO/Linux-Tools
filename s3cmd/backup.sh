@@ -62,7 +62,7 @@ ThrowError(){
 #======== Upload Log File ===========
 UploadLog(){
 
-	executescript="s3cmd put $logfile --reduced-redundancy s3://${s3BucketName,,}$logfile"
+	executescript="s3cmd put $logfile s3://${s3BucketName,,}$logfile"
 
 	#execute the upload
 	$executescript
