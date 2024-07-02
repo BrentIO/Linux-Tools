@@ -165,7 +165,7 @@ else
 
 fi
 
-executescript="s3cmd sync / --stats --delete-removed --reduced-redundancy --verbose --include-from=$includefile --exclude-from=$excludefile "
+executescript="s3cmd sync / --stats --delete-removed --verbose --include-from=$includefile --exclude-from=$excludefile "
 
 #see if this is a dry run
 if [ "$isDryRun" = "true" ]; then
